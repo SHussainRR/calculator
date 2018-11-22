@@ -1,0 +1,683 @@
+include irvine32.inc
+
+.data
+
+saveflags word ?
+msgBitInformation BYTE "The Bits are As Follows: ",0
+msgBitInformation1 BYTE "0->Carry Flag",13,10,"1->reserved",13,10,"2->Parity Flag",13,10,"3->reserved",13,10,"4->Auxillary Flag",13,10,"5->reserved",13,10,"6->Zero/EQUAL Flag",13,10,"7->Sign Flag",13,10,"11->Overflow Flag",0
+designText BYTE "----------------------------------------------",0
+
+msg byte "Testing",0
+msg1 byte "                   CALCULATOR ",0
+msg2 byte "Project made by :",0
+msg3 byte "Hussain Raza , Maheen Khan , Haris",0
+msg4 byte "Press 1 for addtion , Press 2 for subraction ",0
+msg5 byte "Press 3 for multipication and Press 4 for division.",0
+msg6 byte "Enter the two digits to add :",0
+msg7 byte "The sum of the two numbers after addition is : ",0
+msg8 byte "Enter the two digits to subract :",0
+msg9 byte "After subtraction , the  result is  :",0
+msg10 byte "Enter two Digits to multiply : ",0
+msg11 byte "Result after multipication is ",0
+msg12  byte "Enter two Digits to Divide :",0
+msg13 byte "Results after Division :",0
+msg14 byte "If you want to use calculator again press 1 ",0
+msg15 byte "Else press anykey to end",0
+msg16 byte "Press 5 to Take Modulus of two numbers ",0
+msg17 byte "Enter The Two Numbers",0
+msg18 byte "Modulus of two numbers is ",0
+msg19 byte "Enter the value:",0
+msg20 byte "How many times do you want to perform the operation:",0
+msg21 byte "Press 6 for shift left and Press 7 for shift right",0
+msg22 byte "Press 8 for shift arithimatic left and Press 9 for shift arithimatic right",0
+msg23 byte "Press 10 for rotate left and Press 11 for rotate right",0
+msg24 byte "Press 12 for rotate carry left and Press 13 for rotate carry right",0
+msg25 byte "Press 14 for Displaying carry flags",0
+msgSHLD byte "Enter Value: ",0
+msgSHLDBIT byte "Enter rotate bits: ",0
+rotateBit dword ?
+msg26 byte "Press 15 for SHLD Rotation",0
+msg27 byte "Press 16 for SHRD Rotation",0
+DecVal byte "Decimal Equivalent:	",0
+IntVal byte "Integer Equivalent:	",0
+BinVal byte "Binary Equivalent:	",0
+HexVal byte "Hex Equivalent:	",0
+
+.code
+main proc
+
+mov edx, offset msg1
+call WriteString
+mov eax,1000
+call crlf
+call delay
+mov edx, offset msg2
+call WriteString
+mov edx, offset msg3
+call WriteString
+call crlf
+
+call delay
+call delay
+call delay
+start:
+call Clrscr
+mov edx, offset msg4
+call WriteString
+call crlf
+mov edx, offset msg5
+call WriteString
+call crlf
+
+mov edx, offset msg16
+call WriteString
+call crlf
+
+mov edx, offset msg21
+call WriteString
+call crlf
+
+mov edx, offset msg22
+call WriteString
+call crlf
+
+mov edx, offset msg23
+call WriteString
+call crlf
+
+mov edx, offset msg24
+call WriteString
+call crlf
+
+mov edx, offset msg25
+call WriteString
+call crlf
+
+mov edx, offset msg26
+call WriteString
+call crlf
+
+mov edx, offset msg27
+call WriteString
+call crlf
+
+mov eax,0
+call ReadInt
+call crlf
+call crlf
+cmp ax,1
+je Addition
+cmp ax,2
+je Subraction
+cmp ax,3
+je Multipication
+cmp ax,4
+je Division
+cmp ax,5
+je Modulus
+cmp ax,6
+je shiftleft
+cmp ax,7
+je shiftright
+cmp ax,8
+je shiftaleft
+cmp ax,9
+je shiftaright
+cmp ax,10
+je rotateleft
+cmp ax,11
+je rotateright
+cmp ax,12
+je rotatecleft
+cmp ax,13
+je rotatecright
+cmp ax,14
+je checkflagvalues
+cmp ax,15
+je SHLDFunction
+cmp ax,16
+je SHRDFunction
+
+jmp last
+
+Addition:
+mov edx, offset msg6
+call WriteString
+call crlf
+call ReadInt
+mov ebx,eax
+call  readInt
+mov ecx,eax
+add ebx,ecx
+mov eax,ebx
+mov edx,offset msg7
+call writeString
+mov edx,offset IntVal
+call writeString
+call WriteInt
+call crlf
+mov edx,offset BinVal
+call writeString
+call writeBin
+call crlf
+mov edx,offset HexVal
+call writeString
+call writeHex
+call crlf
+mov eax,3000
+call delay
+call crlf
+call crlf
+jmp last
+
+Subraction:
+mov edx,offset msg8
+call writeString
+call readInt
+mov ebx,eax
+call ReadInt
+mov ecx,eax
+sub ebx,ecx
+mov eax,ebx
+call crlf
+mov edx,offset msg9
+call WriteString
+mov edx,offset IntVal
+call writeString
+call WriteInt
+call crlf
+mov edx,offset BinVal
+call writeString
+call writeBin
+call crlf
+mov edx,offset HexVal
+call writeString
+call writeHex
+call crlf
+mov eax,3000
+call delay
+jmp last
+
+
+Multipication:
+mov edx, offset msg10
+call WriteString
+Call ReadInt
+Call Crlf
+mov ebx,eax
+Call ReadInt
+Call Crlf
+mul ebx
+mov edx,offset msg11
+call WriteString
+mov edx,offset IntVal
+call writeString
+call WriteInt
+call crlf
+mov edx,offset BinVal
+call writeString
+call writeBin
+call crlf
+mov edx,offset HexVal
+call writeString
+call writeHex
+call crlf
+mov eax,3000
+call delay
+jmp last
+
+Division:
+mov edx,0
+mov edx, offset msg12
+call WriteString
+mov eax,0
+call readint
+mov ebx,eax
+call readint
+mov ecx,eax
+mov eax,ebx
+mov ebx,ecx
+mov edx,0
+div ebx
+mov edx, offset msg13
+call WriteString
+mov edx,offset IntVal
+call writeString
+call WriteInt
+call crlf
+mov edx,offset BinVal
+call writeString
+call writeBin
+call crlf
+mov edx,offset HexVal
+call writeString
+call writeHex
+call crlf
+jmp last
+
+
+
+Modulus:
+mov edx,0
+mov edx, offset msg17
+call WriteString
+mov eax,0
+call readint
+mov ebx,eax
+call readint
+mov ecx,eax
+mov eax,ebx
+mov ebx,ecx
+mov edx,0
+div ebx
+mov eax,edx
+
+
+mov edx, offset msg18
+call WriteString
+mov edx,offset IntVal
+call writeString
+call WriteInt
+call crlf
+mov edx,offset BinVal
+call writeString
+call writeBin
+call crlf
+mov edx,offset HexVal
+call writeString
+call writeHex
+call crlf
+jmp last
+
+shiftleft:
+mov eax,0
+mov edx,0
+mov edx,offset msg19
+call WriteString
+mov eax,0
+call readint
+mov ebx,eax
+mov edx,0
+mov edx,offset msg20
+mov ecx,0
+call readint
+mov cl,al
+shl ebx,cl
+mov eax,ebx
+mov edx,offset IntVal
+call writeString
+call WriteInt
+call crlf
+mov edx,offset BinVal
+call writeString
+call writeBin
+call crlf
+mov edx,offset HexVal
+call writeString
+call writeHex
+call crlf
+jmp last
+
+shiftright:
+mov eax,0
+mov edx,0
+mov edx,offset msg19
+call WriteString
+mov eax,0
+call readint
+mov ebx,eax
+mov edx,0
+mov edx,offset msg20
+mov ecx,0
+call readint
+mov cl,al
+shr ebx,cl
+mov eax,ebx
+mov edx,offset IntVal
+call writeString
+call WriteInt
+call crlf
+mov edx,offset BinVal
+call writeString
+call writeBin
+call crlf
+mov edx,offset HexVal
+call writeString
+call writeHex
+call crlf
+
+jmp last
+
+shiftaleft:
+mov eax,0
+mov edx,0
+mov edx,offset msg19
+call WriteString
+mov eax,0
+call readint
+mov ebx,eax
+mov edx,0
+mov edx,offset msg20
+mov ecx,0
+call readint
+mov cl,al
+sal ebx,cl
+mov eax,ebx
+mov edx,offset IntVal
+call writeString
+call WriteInt
+call crlf
+mov edx,offset BinVal
+call writeString
+call writeBin
+call crlf
+mov edx,offset HexVal
+call writeString
+call writeHex
+call crlf
+
+jmp last
+
+shiftaright:
+mov eax,0
+mov edx,0
+mov edx,offset msg19
+call WriteString
+mov eax,0
+call readint
+mov ebx,eax
+mov edx,0
+mov edx,offset msg20
+mov ecx,0
+call readint
+mov cl,al
+sar ebx,cl
+mov eax,ebx
+mov edx,offset IntVal
+call writeString
+call WriteInt
+call crlf
+mov edx,offset BinVal
+call writeString
+call writeBin
+call crlf
+mov edx,offset HexVal
+call writeString
+call writeHex
+call crlf
+
+jmp last
+
+rotateleft:
+
+mov eax,0
+mov edx,0
+mov edx,offset msg19
+call WriteString
+mov eax,0
+call readint
+mov ebx,eax
+mov edx,0
+mov edx,offset msg20
+mov ecx,0
+call readint
+mov cl,al
+rol ebx,cl
+mov eax,ebx
+mov edx,offset IntVal
+call writeString
+call WriteInt
+call crlf
+mov edx,offset BinVal
+call writeString
+call writeBin
+call crlf
+mov edx,offset HexVal
+call writeString
+call writeHex
+call crlf
+
+jmp last
+
+rotateright:
+
+mov eax,0
+mov edx,0
+mov edx,offset msg19
+call WriteString
+mov eax,0
+call readint
+mov ebx,eax
+mov edx,0
+mov edx,offset msg20
+mov ecx,0
+call readint
+mov cl,al
+ror ebx,cl
+mov eax,ebx
+mov edx,offset IntVal
+call writeString
+call WriteInt
+call crlf
+mov edx,offset BinVal
+call writeString
+call writeBin
+call crlf
+mov edx,offset HexVal
+call writeString
+call writeHex
+call crlf
+
+jmp last
+
+rotatecleft:
+
+mov eax,0
+mov edx,0
+mov edx,offset msg19
+call WriteString
+mov eax,0
+call readint
+mov ebx,eax
+mov edx,0
+mov edx,offset msg20
+mov ecx,0
+call readint
+mov cl,al
+rcl ebx,cl
+mov eax,ebx
+mov edx,offset IntVal
+call writeString
+call WriteInt
+call crlf
+mov edx,offset BinVal
+call writeString
+call writeBin
+call crlf
+mov edx,offset HexVal
+call writeString
+call writeHex
+call crlf
+
+jmp last
+
+rotatecright:
+
+mov eax,0
+mov edx,0
+mov edx,offset msg19
+call WriteString
+mov eax,0
+call readint
+mov ebx,eax
+mov edx,0
+mov edx,offset msg20
+mov ecx,0
+call readint
+mov cl,al
+rcr ebx,cl
+mov eax,ebx
+mov edx,offset IntVal
+call writeString
+call WriteInt
+call crlf
+mov edx,offset BinVal
+call writeString
+call writeBin
+call crlf
+mov edx,offset HexVal
+call writeString
+call writeHex
+call crlf
+
+jmp last
+
+
+checkflagvalues:
+mov edx , offset msgBitInformation
+call crlf
+call writestring
+call crlf
+
+mov edx , offset msgBitInformation1
+call crlf
+call writestring
+call crlf
+
+
+
+mov eax,0
+pushf
+pop AX
+mov saveflags,ax
+mov edx , offset designText
+call writestring
+call crlf
+call writebin
+call crlf
+mov edx , offset designText
+call writestring
+jmp last
+
+;;;
+SHLDFunction:
+mov ebx,0
+mov eax,0
+mov ecx,0
+mov edx,0
+
+mov edx,offset msgSHLD ;enter value msg
+call writestring
+call crlf
+
+call readInt ;first value in ebx
+
+mov ebx,eax
+
+mov eax,0
+
+call writestring
+call crlf
+call readInt ;2nd value in ecx
+
+mov ecx,eax
+mov eax,0
+
+mov edx,offset msgSHLDBIT
+call writestring
+call crlf
+call readInt
+
+mov rotateBit,eax
+mov eax,ecx
+mov ecx,rotatebit
+shld ebx,eax,cl
+
+mov eax,ebx
+call crlf
+mov edx,offset DecVal
+call writeString
+call WriteDec
+call crlf
+mov edx,offset BinVal
+call writeString
+call writeBin
+call crlf
+mov edx,offset HexVal
+call writeString
+call writeHex
+call crlf
+jmp last
+
+
+SHRDFunction:
+mov ebx,0
+mov eax,0
+mov ecx,0
+mov edx,0
+
+mov edx,offset msgSHLD ;enter value msg
+call writestring
+call crlf
+
+call readInt ;first value in ebx
+
+mov ebx,eax
+
+mov eax,0
+
+call writestring
+call crlf
+call readInt ;2nd value in ecx
+
+mov ecx,eax
+mov eax,0
+
+mov edx,offset msgSHLDBIT
+call writestring
+call crlf
+call readInt
+
+mov rotateBit,eax
+mov eax,ecx
+mov ecx,rotatebit
+shrd ebx,eax,cl
+
+mov eax,ebx
+call crlf
+mov edx,offset DecVal
+call writeString
+call WriteDec
+call crlf
+mov edx,offset BinVal
+call writeString
+call writeBin
+call crlf
+mov edx,offset HexVal
+call writeString
+call writeHex
+call crlf
+call crlf
+
+
+jmp last
+last:
+call crlf
+mov edx, offset msg14
+call WriteString
+Call crlf
+mov edx, offset msg15
+call WriteString
+mov eax,0
+call ReadInt
+cmp ax,1
+je start
+
+
+
+finish:
+call crlf
+call crlf
+    exit
+main endp
+end main
